@@ -1,21 +1,21 @@
 import React from 'react';
 import '@progress/kendo-theme-default/dist/all.css';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Formulario from './Formulario';
+import GridPage from './pages/GridPage';
 
-class App extends React.Component {
-  render() {
-    return (
-      <div className="App">
-        <Formulario />
-      </div>
-    );
-  }
+function App() {
+  return (
+    <div className="App">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Formulario />} />
+          <Route path="/grid" element={<GridPage />} />
+        </Routes>
+      </Router>
+    </div>
+  );
 }
 
-export default App;
-
-
-
-
-
+export default App;  

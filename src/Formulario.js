@@ -1,42 +1,95 @@
 import React from 'react';
-import { Form, Field } from '@progress/kendo-react-form';
+import { Form, Field, FormElement } from '@progress/kendo-react-form';
 import { Input } from '@progress/kendo-react-inputs';
-import { Button } from '@progress/kendo-react-buttons';
+import { Error } from '@progress/kendo-react-labels';
+import { Link } from 'react-router-dom';
 
-class Formulario extends React.Component {
-  render() {
+
+const emailRegex = new RegExp(/\S+@\S+\.\S+/)
+const emailValidator = value => emailRegex.test(value) ? "" : "Please enter a valid email."
+const EmailInput = fieldRenderProps => {
+const {
+validationMessage,
+visited,
+...others
+} = fieldRenderProps;
+return <div>
+ <Input {...others} />
+{visited && validationMessage && <Error>{validationMessage}</Error>}
+</div>;
+};
+
+const Formulario = () => {
+    const [messages, setMessages] = React.useState(initialMessages);
+  
+    const addNewMessage = (event) => {
+      setMessages([...messages, event.message]);
+    };
+  
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const message = {
+        nombre: formData.get('nombre'),
+        apellido: formData.get('apellido'),
+        correo: formData.get('correo'),
+        telefono: formData.get('telefono'),
+        mensaje: formData.get('mensaje'),
+      };
+      addNewMessage({ message });
+    };
+  
     return (
-      <div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Form
+          onSubmit={handleSubmit}
           render={(formRenderProps) => (
-            <form onSubmit={formRenderProps.onSubmit}>
-              <fieldset>
-                <legend>Formulario</legend>
-                <div>
-                  <Field label="Nombre:" labellayout="left" name="nombre" component={Input}  />
+            <FormElement style={{ maxWidth: 650 }}>
+              <fieldset className={'k-form-fieldset'}>
+                <legend className={'k-form-legend'}>Formulario</legend>
+                <div className="mb-3">
+                  <Field label="Nombre:" name="nombre" component={Input} />
                 </div>
-                <div>
-                  <Field label="Apellido:" labellayout="left" name="apellido" component={Input} />
+                <div className="mb-6">
+                  <Field label="Apellido:" name="apellido" component={Input} />
                 </div>
-                <div>
-                  <Field label="Correo electrónico:" labellayout="left" name="correo" component={Input} />
+                <div className="mb-3">
+                  <Field
+                    label="Correo electrónico:"
+                    type="email"
+                    name="correo"
+                    component={EmailInput}
+                    validator={emailValidator}
+                  />
                 </div>
-                <div>
-                  <Field label="Teléfono:" labellayout="left" name="telefono" component={Input} />
+                <div className="mb-3">
+                  <Field label="Teléfono:" name="telefono" component={Input} />
                 </div>
-                <div>
-                  <Field  label="Mensaje:" labellayout="left" name="mensaje" component={Input}/>
-                </div>
-                <div>
-                  <Button primary="true" type="submit">Enviar</Button>
+                <div className="mb-3">
+                  <Field label="Mensaje:" name="mensaje" component={Input} />
                 </div>
               </fieldset>
-            </form>
+                <div style={{ textAlign: 'center' }}> 
+                  <div className="k-form-buttons">
+                    <button 
+                      primary="true"
+                      type={'submit'}
+                      className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base"
+                      disabled={!formRenderProps.allowSubmit}>Enviar
+                    </button>
+                    <Link to="/grid" className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" style={{ marginLeft: '10px' }}>
+                      Ver registros
+                    </Link>
+                  </div>
+                </div>
+            </FormElement>
           )}
         />
       </div>
     );
-  }
-}
-
-export default Formulario;
+  };
+  
+  const initialMessages = [];
+  
+  export default Formulario;
+  
