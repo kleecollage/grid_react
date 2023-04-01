@@ -1,11 +1,12 @@
-const express = require('express');
-const cors = require('cors');
+import express, { json } from 'express';
+import cors from 'cors';
+import gridRoutes from '../routes/gridRoutes';
+
 const app = express();
-const port = 5000;
-const gridRoutes = require('../routes/gridRoutes');
+const port = 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(json());
 app.use('/api/grid', gridRoutes);
 
 app.listen(port, () => {

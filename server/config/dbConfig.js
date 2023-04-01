@@ -1,4 +1,4 @@
-const sql = require('mssql');
+import { connect } from 'mssql';
 
 // Configuración de la base de datos
 const config = {
@@ -15,7 +15,7 @@ const config = {
 // Función para conectarse a la base de datos
 async function connectToDb() {
   try {
-    let pool = await sql.connect(config);
+    let pool = await connect(config);
     console.log('Conexión exitosa a la base de datos');
     return pool;
   } catch (error) {
@@ -23,6 +23,8 @@ async function connectToDb() {
   }
 }
 
-module.exports = {
+const db = {
   connectToDb
 };
+
+export default db;

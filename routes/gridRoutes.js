@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const dbConfig = require('../server/config/dbConfig');
-const sql = require('mssql');
+import { Router } from 'express';
+import dbConfig from '../server/config/dbConfig';
+import { connect, Request } from 'mssql';
 
-router.get('/api/grid', (req, res) => {
-  sql.connect(dbConfig, err => {
+const router = Router();
+
+router.get('/', (req, res) => {
+  connect(dbConfig, err => {
     if (err) {
       console.log(err);
       res.status(500).send('Error en el servidor al conectar con la base de datos');
@@ -12,8 +13,8 @@ router.get('/api/grid', (req, res) => {
     }
 
 
-    const request = new sql.Request();
-    request.query('SELECT * FROM dbo.grid', (err, result) => {
+    const request = new Request();
+    request.query('USE grid_react SELECT * FROM dbo.grid', (err, result) => {
       if (err) {
         console.log(err);
         res.status(500).send('Error en el servidor al obtener los datos');
@@ -24,4 +25,4 @@ router.get('/api/grid', (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

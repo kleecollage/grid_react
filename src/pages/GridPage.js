@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 
-
 function GridPage() {
   const [data, setData] = useState([]);
 
@@ -16,10 +15,13 @@ function GridPage() {
         setData(jsonData);
       } catch (error) {
         console.error('There was a problem fetching data:', error);
+        const responseBody = error.response ? await error.response.text() : 'Unknown error';
+        console.log('Response:', responseBody);
       }
     };
     fetchData();
   }, []);
+
   return (
     <div>
       <h1>Grid Page</h1>
